@@ -3,27 +3,25 @@ $.getScript("/socket.io/socket.io.js", function(){
 	
 	var votos;
 
-	//Servidor envia senal de conexion unicamente una vez, lee el archivo data.json y crea la grafica. 
+	//Servidor envia senal de conexion unicamente una vez, lee todos los datos y crea la grafica. 
 	socket.on('connect', function(ioData){
-		d3.json('data.json', function(jsonData) {
-			votos = jsonData;			
-			console.log(votos);
-			nv.addGraph(function() {
-			   var chart = nv.models.discreteBarChart()
-			       .x(function(d) { return d.label })
-			       .y(function(d) { return d.value })
-			       .staggerLabels(true)
-			       .tooltips(true)
-			       .showValues(true);
-			 
-				d3.select('#chart svg')
-				       .datum(votos)
-					.transition().duration(500)
-				       .call(chart);
-				nv.utils.windowResize(chart.update);
+		votos = ioData;			
+		console.log(votos);
+		nv.addGraph(function() {
+		   var chart = nv.models.discreteBarChart()
+		       .x(function(d) { return d.label })
+		       .y(function(d) { return d.value })
+		       .staggerLabels(true)
+		       .tooltips(true)
+		       .showValues(true);
+		 
+			d3.select('#chart svg')
+			       .datum(votos)
+				.transition().duration(500)
+			       .call(chart);
+			nv.utils.windowResize(chart.update);
 
-			   return chart;
-			});
+		   return chart;
 		});
 	});
 
