@@ -3,7 +3,8 @@ var express = require('express')
 	,http = require('http')
 	,app = express()
 	,server = http.createServer(app)
-	,io = require('socket.io').listen(server);
+	,io = require('socket.io').listen(server)
+	,votos = require('./data.json');
 
 
 //var mongolianServer = new mongolian;
@@ -19,8 +20,10 @@ app.get('/',function(req,res){
 
 
 io.sockets.on('connection', function(socket){
-	//A los nuevos usuarios les indica que carguen el archivo data.json
-	socket.emit('connect');
+	//A los nuevos usuarios les envia todos los datos previamente cargados, 
+	//los datos se leen desde la base de datos
+	
+	socket.emit('connect',votos);
 
 	var i = 0;
 	setInterval(function(){
