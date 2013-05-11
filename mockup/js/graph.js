@@ -1,21 +1,60 @@
- d3.json('data.json', function(data) {
-   nv.addGraph(function() {
-     var chart = nv.models.stackedAreaChart()
-                   .x(function(d) { return d[0] })
-                   .y(function(d) { return d[1] })
-                   .clipEdge(true);
+$.getScript("/socket.io/socket.io.js", function(){
+	var socket = io.connect('http://localhost');
+	
+	var votos;
 
-     chart.xAxis
-         .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+	//Servidor envia senal de conexion unicamente una vez, lee el archivo data.json y crea la grafica. 
+	socket.on('connect', function(ioData){
+		d3.json('data.json', function(jsonData) {
+			votos = jsonData;			
+			console.log(votos);
+			nv.addGraph(function() {
+			   var chart = nv.models.discreteBarChart()
+			       .x(function(d) { return d.label })
+			       .y(function(d) { return d.value })
+			       .staggerLabels(true)
+			       .tooltips(true)
+			       .showValues(true);
+			 
+				d3.select('#chart svg')
+				       .datum(votos)
+					.transition().duration(500)
+				       .call(chart);
+				nv.utils.windowResize(chart.update);
 
-     chart.yAxis
-         .tickFormat(d3.format(',.2f'));
+			   return chart;
+			});
+		});
+	});
 
-     d3.select('#chart svg')
-       .datum(data)
-         .transition().duration(500).call(chart);
-     nv.utils.windowResize(chart.update);
+	//Cuando existe un cambio en la base de datos, el servidor envia senal de actualizacion, con el nombre del partido y el numero de votos. 
+	//Busca en la variable 'votos' el partido, y actualiza la grafica.
+	socket.on('update', function(ioPartido, ioVotos){
+		console.log("updating graph");
+		for(var i=0; i<votos[0].values.length; i++){
+			if(votos[0].values[i].label == ioPartido){
+				votos[0].values[i].value = ioVotos;				
+				break;
+			}
+		}
 
-     return chart;
-   });
- })
+		nv.addGraph(function() {
+		   var chart = nv.models.discreteBarChart()
+		       .x(function(d) { return d.label })
+		       .y(function(d) { return d.value })
+		       .staggerLabels(true)
+		       .tooltips(true)
+		       .showValues(true);
+		 
+			d3.select('#chart svg')
+			       .datum(votos)
+				.transition().duration(500)
+			       .call(chart);
+			nv.utils.windowResize(chart.update);
+
+		   return chart;
+		});
+	});
+});
+
+
