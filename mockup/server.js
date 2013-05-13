@@ -55,7 +55,7 @@ io.sockets.on('connection', function(socket){
 
 	var i = 0;
 	var interval = setInterval(function(){
-		//TODO: Enviar unicamente cuando encuentre cambios en la base de datos, revisa cada segundo
+		//Enviar unicamente cuando encuentre cambios en la base de datos, revisa cada segundo
 		//Se envia el nombre del partido y el numero de votos
 		collection.count({"candidato.partido":"URNG"},function(err,post){ 
 			var $urng = post;
