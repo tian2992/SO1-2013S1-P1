@@ -28,7 +28,7 @@ io.sockets.on('connection', function(socket){
 		//TODO: Enviar unicamente cuando encuentre cambios en la base de datos
 		//Actualizar data.json si existen cambios
 		//Se envia el nombre del partido y el numero de votos
-		socket.emit('update', 'PP' , ++i);
+		socket.emit('update', 'UNE' , ++i);
 	}, 1000);
 });
 
