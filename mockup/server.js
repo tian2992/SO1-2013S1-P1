@@ -7,15 +7,9 @@ var express = require('express')
 	//,votos = require('./data.json')
 	;
 
-<<<<<<< HEAD
-
 var mongolianServer = new mongolian;
 var db = mongolianServer.db("proyecto");
 var collection = db.collection("votos");
-
-=======
-//var mongolianServer = new mongolian;
->>>>>>> upstream/master
 
 app.set("view options", {layout: false});
 app.use(express.static(__dirname + '/static'));
@@ -26,7 +20,6 @@ app.get('/',function(req,res){
 	res.render('main.html');
 });
 
-<<<<<<< HEAD
 //carga los datos de la base de datos a memoria
 var 	urng = 0
 	,pp = 0
@@ -98,19 +91,7 @@ io.sockets.on('connection', function(socket){
 			} 
 		});
 		
-=======
-io.sockets.on('connection', function(socket){
-	//A los nuevos usuarios les envia todos los datos previamente cargados,
-	//los datos se leen desde la base de datos
-	socket.emit('connect',votos);
 
-	var i = 0;
-	setInterval(function(){
-		//TODO: Enviar unicamente cuando encuentre cambios en la base de datos
-		//Actualizar data.json si existen cambios
-		//Se envia el nombre del partido y el numero de votos
-		socket.emit('update', 'UNE' , ++i);
->>>>>>> upstream/master
 	}, 1000);
 
 	socket.on('disconnect', function () {
