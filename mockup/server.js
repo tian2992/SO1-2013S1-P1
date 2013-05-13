@@ -4,6 +4,7 @@ var express = require('express')
 	,app = express()
 	,server = http.createServer(app)
 	,io = require('socket.io').listen(server)
+	// Deberia ser reemplazado con datos reales jalados de la DB.
 	,votos = require('./data.json');
 
 //var mongolianServer = new mongolian;
