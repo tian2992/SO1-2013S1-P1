@@ -16,6 +16,14 @@
         padding-top: 60px;
         padding-bottom: 40px;
       }
+	.dropdown-menu label {
+		padding: 0 10px;
+	}
+	.dropdown-menu input{
+		margin-right: 5px;
+		float: left;
+	}
+
       #chart svg {
         height: 400px;
       }
@@ -28,11 +36,18 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">CuentaVotos</a>
+          <a class="brand" href="../">CuentaVotos</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Inicio</a></li>
-              <li><a href="#about">Por Departamento</a></li>
+                <li class="active"><a href="../">Inicio</a></li>
+		<li class="dropdown" id="Departamentos">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				Regiones
+				<b class="caret"></b>
+			</a>
+			<ul class="dropdown-menu" id="departamentos">
+			</ul>
+		</li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -40,7 +55,7 @@
     </div>
 
     <div class="container">
-
+	
       <!-- data graph -->
       <div id="chart" class="hero-unit">
         <svg></svg>
@@ -49,14 +64,10 @@
       <!-- Aditional Content -->
       <div class="row">
         <div class="span4">
-          <h2>Estadisticas 1</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+          <h2 id="candidato1"></h2>
         </div>
         <div class="span8">
-          <h2>Estadisticas 2</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+          <h2 id="candidato2"></h2>
        </div>
       </div>
 
