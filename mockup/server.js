@@ -136,7 +136,8 @@ io.sockets.on('connection', function(socket){
 	socket.emit('connect',[votos[0]],deptos);
 	
 	//Cada cierto tiempo envia todos los datos, si el usuario se encuentra viendo un departamento envia datos solo del departamento.
-	var interval = setInterval(function(){
+	//var interval = setInterval(function(){
+	socket.on('query', function () {	
 		if(!depto){
 			socket.volatile.emit('connect',[votos[0]],deptos);
 		}else{
@@ -146,7 +147,8 @@ io.sockets.on('connection', function(socket){
 				}
 			}
 		}
-	}, 1000);
+	//}, 1000);
+	});
 
 	socket.on('disconnect', function () {
 		clearInterval(interval);
