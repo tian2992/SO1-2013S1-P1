@@ -1,6 +1,6 @@
 $.getScript("js/bootstrap.js", function() {
 $.getScript("/socket.io/socket.io.js", function(){
-	var socket = io.connect('http://localhost');
+	var socket = io.connect('//');
 	
 	var votos;
 
