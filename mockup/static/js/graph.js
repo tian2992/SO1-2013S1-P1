@@ -1,6 +1,7 @@
+$.getScript("js/hummingbird.js", function() {
 $.getScript("js/bootstrap.js", function() {
 $.getScript("/socket.io/socket.io.js", function(){
-	var socket = io.connect('http://localhost');
+	var socket = io.connect('//');
 	
 	var votos;
 
@@ -26,6 +27,8 @@ $.getScript("/socket.io/socket.io.js", function(){
 
 	//Servidor envia senal de conexion, lee todos los datos y crea la grafica. 
 	socket.on('connect', function(ioData,deptos){
+		HummingbirdTracker.track();
+	
 		votos = ioData;	
 		//actualiza el menu con los departamentos desde la base de datos
 		$("#departamentos").empty();
@@ -96,6 +99,7 @@ $.getScript("/socket.io/socket.io.js", function(){
 		});
 	});
 
+});
 });
 });
 

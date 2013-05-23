@@ -9,7 +9,7 @@ var express = require('express')
 	//,votos = require('./data.json')
 	;
 
-var mongolianServer = new mongolian;
+var mongolianServer = new mongolian("localhost");
 var db = mongolianServer.db("proyecto");
 var collection = db.collection("votos");
 
@@ -159,4 +159,4 @@ io.sockets.on('connection', function(socket){
 
 });
 
-server.listen(8080);
+server.listen(8000);
