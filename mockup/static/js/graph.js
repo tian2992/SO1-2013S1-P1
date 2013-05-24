@@ -25,6 +25,10 @@ $.getScript("/socket.io/socket.io.js", function(){
 		socket.emit('departamento',{depto:departamento});
 	}
 
+	var interval = setInterval(function(){
+		socket.emit('query');
+	}, 1000);
+
 	//Servidor envia senal de conexion, lee todos los datos y crea la grafica. 
 	socket.on('connect', function(ioData,deptos){
 		HummingbirdTracker.track();
