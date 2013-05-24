@@ -18,10 +18,18 @@ app.use(express.static(__dirname + '/static'));
 app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
+//To parse json
+app.use(express.bodyParser());
+
 app.get('/',function(req,res){
 	res.render('main.html');
 });
 
+app.post('/vote', function(req,res){
+    console.log(req.body);
+    collection.insert(req.body);
+    res.send(req.body);
+});
 
 //Estructura de los votos y departamentos
 var votos = [{	"key" : "Total",
@@ -33,7 +41,7 @@ var deptos = [];
 collection.group({ns:"votos",
 	  key:{Location:1},
 	  initial:{},
-	  $reduce:function(curr,result){}}, 
+	  $reduce:function(curr,result){}},
 	  function(error,post){
 		for(var i=0;i<post.retval.length;i++){
 			votos.push({"key":post.retval[i].Location, "values":[]});
@@ -46,7 +54,7 @@ collection.group({ns:"votos",
 collection.group({ns:"votos",
 	key:{"candidato.partido":1},
 	initial:{total:0},
-	$reduce:function(curr,result){result.total+=1;}}, 
+	$reduce:function(curr,result){result.total+=1;}},
 	function(error,post){
 		for(var i=0;i<post.retval.length;i++){
 			votos[0].values.push({"label":post.retval[i]['candidato.partido'],"value":post.retval[i].total});
@@ -58,7 +66,7 @@ collection.group({ns:"votos",
 collection.group({ns:"votos",
 	key:{"candidato.partido":1,"Location":1},
 	initial:{total:0},
-	$reduce:function(curr,result){result.total+=1;}}, 
+	$reduce:function(curr,result){result.total+=1;}},
 	function(error,post){
 		for(var i=0;i<post.retval.length;i++){
 			for(var j=0;j<votos.length;j++){
@@ -78,7 +86,7 @@ var interval = setInterval(function(){
 	collection.group({ns:"votos",
 		key:{"candidato.partido":1},
 		initial:{total:0},
-		$reduce:function(curr,result){result.total+=1;}}, 
+		$reduce:function(curr,result){result.total+=1;}},
 		function(error,post){
 			for(var i=0;i<post.retval.length;i++){
 				var partidoEncontrado = false;
@@ -87,11 +95,11 @@ var interval = setInterval(function(){
 						votos[0].values[j].value = post.retval[i].total;
 						partidoEncontrado = true;
 						break;
-					}				
+					}
 				}
 				if(!partidoEncontrado){
 					votos[0].values.push({"label":post.retval[i]['candidato.partido'],"value":post.retval[i].total});
-				}			
+				}
 			}
 		  }
 	);
@@ -100,7 +108,7 @@ var interval = setInterval(function(){
 	collection.group({ns:"votos",
 		key:{"candidato.partido":1,"Location":1},
 		initial:{total:0},
-		$reduce:function(curr,result){result.total+=1;}}, 
+		$reduce:function(curr,result){result.total+=1;}},
 		function(error,post){
 			for(var i=0;i<post.retval.length;i++){
 				var deptoEncontrado = false;
@@ -123,7 +131,7 @@ var interval = setInterval(function(){
 				}
 				if(!deptoEncontrado){
 					deptos.push(post.retval[i].Location);
-					votos.push({"key":post.retval[i].Location,"values":[{"label":post.retval[i]['candidato.partido'],"value":post.retval[i].total}]});				
+					votos.push({"key":post.retval[i].Location,"values":[{"label":post.retval[i]['candidato.partido'],"value":post.retval[i].total}]});
 				}
 			}
 		  }
@@ -134,10 +142,10 @@ io.sockets.on('connection', function(socket){
 	var depto;
 	//A los nuevos usuarios les envia todos los datos previamente cargados
 	socket.emit('connect',[votos[0]],deptos);
-	
+
 	//Cada cierto tiempo envia todos los datos, si el usuario se encuentra viendo un departamento envia datos solo del departamento.
 	//var interval = setInterval(function(){
-	socket.on('query', function () {	
+	socket.on('query', function () {
 		if(!depto){
 			socket.volatile.emit('connect',[votos[0]],deptos);
 		}else{
